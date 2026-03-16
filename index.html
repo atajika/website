@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Amane Tajika — Paleontologist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --ink: #1a1a18;
+  --ink-mid: #4a4a46;
+  --ink-soft: #8a8a84;
+  --ink-faint: #c8c8c2;
+  --paper: #faf9f6;
+  --paper-warm: #f3f1ec;
+  --paper-tint: #e8e5de;
+  --accent: #2c5f8a;
+  --accent-light: #e4eef6;
+  --accent-mid: #5b9ac7;
+  --accent-warm: #7a4a1e;
+  --accent-warm-light: #f5ece0;
+  --stone: #5a6e5c;
+  --stone-light: #e5ede6;
+  --sans: 'DM Sans', system-ui, sans-serif;
+  --serif: 'Lora', Georgia, serif;
+  --radius: 4px;
+  --radius-lg: 10px;
+  --shadow-card: 0 2px 8px rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.08);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: #0c0d0b; color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(12,13,11,0.7); backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  padding: 0 clamp(1.5rem,5vw,4rem);
+  display: flex; align-items: center; justify-content: space-between; height: 58px;
+  transition: background 0.35s, border-color 0.35s;
+}
+nav.scrolled-light {
+  background: rgba(250,249,246,0.94);
+  border-bottom-color: var(--paper-tint);
+}
+.nav-brand { font-family: var(--serif); font-size: 1rem; font-weight: 500; color: rgba(255,255,255,0.9); text-decoration: none; transition: color 0.3s; }
+.nav-brand em { font-style: italic; color: var(--accent-mid); }
+nav.scrolled-light .nav-brand { color: var(--ink); }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a { font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.65); text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover { color: #fff; }
+nav.scrolled-light .nav-links a { color: var(--ink-mid); }
+nav.scrolled-light .nav-links a:hover { color: var(--accent); }
+
+/* PHOTO SECTION SYSTEM */
+.ps {
+  position: relative;
+  overflow: hidden;
+}
+.ps-bg {
+  position: absolute; inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: scale(1.08);
+  transition: opacity 0.8s ease;
+  opacity: 0;
+}
+.ps-bg.loaded { opacity: 1; }
+.ps-overlay { position: absolute; inset: 0; z-index: 1; }
+.ps-content { position: relative; z-index: 2; padding: clamp(5rem,10vw,8rem) clamp(2rem,6vw,6rem) clamp(4rem,8vw,6rem); }
+
+/* SECTION TYPOGRAPHY */
+.s-label { font-size: 0.71rem; font-weight: 500; letter-spacing: 0.13em; text-transform: uppercase; margin-bottom: 0.75rem; }
+.s-label.on-dark { color: var(--accent-mid); }
+.s-label.on-light { color: var(--accent); }
+.s-title { font-family: var(--serif); font-size: clamp(1.75rem,3vw,2.6rem); font-weight: 500; line-height: 1.18; letter-spacing: -0.015em; }
+.s-title.on-dark { color: #fff; }
+.s-title.on-light { color: var(--ink); }
+.s-sub { font-size: 1rem; margin-top: 0.7rem; max-width: 55ch; }
+.s-sub.on-dark { color: rgba(255,255,255,0.6); }
+.s-sub.on-light { color: var(--ink-mid); }
+.s-header { margin-bottom: 3rem; }
+
+/* REVEAL ANIMATION */
+.rv { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.rv.in { opacity: 1; transform: translateY(0); }
+
+/* ══ HERO ══ */
+.hero-ps { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+.hero-overlay { background: linear-gradient(140deg, rgba(8,14,20,0.88) 0%, rgba(15,24,20,0.55) 60%, rgba(8,14,20,0.28) 100%); }
+.hero-inner { max-width: 680px; }
+.hero-eyebrow { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-mid); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.75rem; }
+.hero-eyebrow::before { content:''; width:2rem; height:1px; background:var(--accent-mid); display:block; flex-shrink:0; }
+.hero-name { font-family: var(--serif); font-size: clamp(3rem,6vw,5.5rem); font-weight: 500; line-height: 1.02; letter-spacing: -0.025em; color: #fff; margin-bottom: 0.3rem; }
+.hero-name-jp { font-family: var(--serif); font-size: 1.05rem; color: rgba(255,255,255,0.45); margin-bottom: 1.75rem; letter-spacing: 0.07em; }
+.hero-desc { font-size: 1.1rem; line-height: 1.78; color: rgba(255,255,255,0.75); max-width: 52ch; margin-bottom: 2rem; }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2.5rem; }
+.htag { padding: 0.3rem 0.85rem; border-radius: 2rem; font-size: 0.74rem; border: 1px solid rgba(255,255,255,0.22); background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.82); backdrop-filter: blur(6px); }
+.hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+.btn-w { display:inline-flex; align-items:center; gap:0.4rem; padding:0.75rem 1.6rem; background:#fff; color:var(--ink); border-radius:var(--radius); font-size:0.875rem; font-weight:500; text-decoration:none; transition:background 0.2s,color 0.2s,transform 0.15s; }
+.btn-w:hover { background:var(--accent-mid); color:#fff; transform:translateY(-2px); }
+.btn-o { display:inline-flex; align-items:center; gap:0.4rem; padding:0.72rem 1.4rem; border:1px solid rgba(255,255,255,0.3); border-radius:var(--radius); font-size:0.875rem; color:rgba(255,255,255,0.78); text-decoration:none; backdrop-filter:blur(6px); transition:all 0.2s; }
+.btn-o:hover { background:rgba(255,255,255,0.1); color:#fff; border-color:rgba(255,255,255,0.6); }
+/* Hero stat bar */
+.hero-stat-bar { position:absolute; bottom:0; left:0; right:0; z-index:2; display:flex; background:rgba(0,0,0,0.38); backdrop-filter:blur(14px); border-top:1px solid rgba(255,255,255,0.1); }
+.hstat { flex:1; padding:1.2rem clamp(1.5rem,3vw,3rem); border-right:1px solid rgba(255,255,255,0.08); }
+.hstat:last-child { border-right:none; }
+.hstat-n { font-family:var(--serif); font-size:1.9rem; font-weight:500; color:#fff; line-height:1; }
+.hstat-l { font-size:0.7rem; letter-spacing:0.09em; text-transform:uppercase; color:rgba(255,255,255,0.42); margin-top:0.2rem; }
+
+/* ══ ABOUT ══ */
+.about-ps { min-height: 100vh; display: flex; align-items: center; }
+.about-overlay { background: linear-gradient(to right, rgba(8,12,8,0.92) 0%, rgba(8,12,8,0.75) 50%, rgba(8,12,8,0.45) 100%); }
+.about-grid { display:grid; grid-template-columns:1fr 1.6fr; gap:5rem; align-items:start; }
+.portrait-frame { width:100%; aspect-ratio:3/4; border-radius:var(--radius-lg); overflow:hidden; position:relative; border:1px solid rgba(255,255,255,0.12); }
+.portrait-quote { position:absolute; bottom:0; left:0; right:0; padding:1.75rem; background:linear-gradient(to top,rgba(8,12,8,0.88) 0%,transparent 70%); }
+.portrait-quote p { font-family:var(--serif); font-size:0.88rem; font-style:italic; color:rgba(255,255,255,0.82); line-height:1.55; }
+.affil-list { margin-top:1.25rem; display:flex; flex-direction:column; gap:0.55rem; }
+.affil-item { display:flex; align-items:flex-start; gap:0.75rem; padding:0.75rem 1rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:var(--radius); backdrop-filter:blur(6px); }
+.affil-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; margin-top:0.4rem; }
+.affil-dot.blue { background:var(--accent-mid); }
+.affil-dot.grn { background:#7aad7c; }
+.affil-txt { font-size:0.81rem; color:rgba(255,255,255,0.58); line-height:1.4; }
+.affil-txt strong { color:rgba(255,255,255,0.88); font-weight:500; display:block; margin-bottom:0.1rem; }
+.about-body p { font-size:1rem; line-height:1.82; color:rgba(255,255,255,0.68); margin-bottom:1.2rem; }
+.about-body p.lead { font-size:1.08rem; color:rgba(255,255,255,0.9); font-family:var(--serif); font-style:italic; line-height:1.78; }
+.tl { margin-top:2.5rem; }
+.tl-row { display:grid; grid-template-columns:5.5rem 1fr; gap:1rem; padding:1.1rem 0; border-top:1px solid rgba(255,255,255,0.09); }
+.tl-row:last-child { border-bottom:1px solid rgba(255,255,255,0.09); }
+.tl-yr { font-size:0.74rem; color:rgba(255,255,255,0.35); text-align:right; border-right:1px solid rgba(255,255,255,0.1); padding-right:1rem; padding-top:0.15rem; line-height:1.5; }
+.tl-role { font-size:0.9rem; font-weight:500; color:rgba(255,255,255,0.88); margin-bottom:0.1rem; }
+.tl-org { font-size:0.82rem; color:rgba(255,255,255,0.48); }
+
+/* ══ RESEARCH ══ */
+.research-ps { min-height: auto; }
+.research-overlay { background: linear-gradient(to bottom, rgba(6,14,26,0.82) 0%, rgba(6,14,26,0.72) 100%); }
+.rg { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+.rc { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.13); border-radius:var(--radius-lg); padding:1.75rem; backdrop-filter:blur(10px); position:relative; overflow:hidden; transition:background 0.25s,transform 0.2s; }
+.rc::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; transform:scaleX(0); transform-origin:left; transition:transform 0.3s; }
+.rc.c1::before { background:var(--accent-mid); }
+.rc.c2::before { background:#7aad7c; }
+.rc.c3::before { background:#c49a5c; }
+.rc:hover { background:rgba(255,255,255,0.11); transform:translateY(-3px); }
+.rc:hover::before { transform:scaleX(1); }
+.rc-icon { font-size:22px; margin-bottom:1rem; display:block; }
+.rc-title { font-family:var(--serif); font-size:1.05rem; font-weight:500; color:#fff; margin-bottom:0.65rem; line-height:1.35; }
+.rc-body { font-size:0.875rem; line-height:1.72; color:rgba(255,255,255,0.62); margin-bottom:1.1rem; }
+.rc-kws { display:flex; flex-wrap:wrap; gap:0.4rem; }
+.kw { font-size:0.7rem; color:rgba(255,255,255,0.52); background:rgba(255,255,255,0.07); padding:0.2rem 0.6rem; border-radius:2rem; border:1px solid rgba(255,255,255,0.1); }
+
+/* ══ PUBLICATIONS ══ */
+.pubs-section { background:var(--paper-warm); padding:clamp(4rem,8vw,6.5rem) clamp(2rem,6vw,6rem); border-top:1px solid var(--paper-tint); }
+.pub-filters { display:flex; gap:0.5rem; margin-bottom:2.5rem; flex-wrap:wrap; }
+.fb { padding:0.35rem 1rem; border-radius:2rem; font-size:0.78rem; border:1px solid var(--ink-faint); background:transparent; color:var(--ink-mid); cursor:pointer; font-family:var(--sans); transition:all 0.2s; }
+.fb.active,.fb:hover { background:var(--ink); color:var(--paper); border-color:var(--ink); }
+.pub-list { display:flex; flex-direction:column; }
+.pub-row { display:grid; grid-template-columns:4.5rem 1fr auto; gap:1.5rem; align-items:start; padding:1.6rem 0; border-bottom:1px solid var(--paper-tint); }
+.pub-row:first-child { border-top:1px solid var(--paper-tint); }
+.pub-yr { font-size:0.77rem; color:var(--ink-soft); text-align:right; border-right:1px solid var(--paper-tint); padding-right:1.2rem; padding-top:0.2rem; }
+.pub-t { font-family:var(--serif); font-size:0.975rem; font-weight:500; color:var(--ink); margin-bottom:0.35rem; line-height:1.45; }
+.pub-a { font-size:0.82rem; color:var(--ink-mid); margin-bottom:0.2rem; }
+.pub-a strong { color:var(--ink); font-weight:500; }
+.pub-j { font-size:0.79rem; color:var(--ink-soft); font-style:italic; }
+.pb { font-size:0.67rem; font-weight:500; letter-spacing:0.06em; text-transform:uppercase; padding:0.2rem 0.55rem; border-radius:2rem; flex-shrink:0; margin-top:0.2rem; white-space:nowrap; }
+.pb-sci { background:var(--accent-light); color:var(--accent); }
+.pb-geo { background:var(--stone-light); color:var(--stone); }
+.pb-plos { background:var(--accent-warm-light); color:var(--accent-warm); }
+.pb-swiss { background:#f0ece5; color:#6a5a3a; }
+.pb-pal { background:#ede8f5; color:#5a3a7a; }
+
+/* ══ AWARDS ══ */
+.awards-ps { min-height: auto; }
+.awards-overlay { background: linear-gradient(150deg, rgba(18,12,4,0.9) 0%, rgba(18,12,4,0.7) 100%); }
+.ag { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+.ac { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.13); border-radius:var(--radius-lg); padding:1.75rem; backdrop-filter:blur(10px); transition:background 0.2s; }
+.ac:hover { background:rgba(255,255,255,0.1); }
+.ac-yr { font-family:var(--serif); font-size:1.5rem; font-weight:500; color:#c49a5c; margin-bottom:0.6rem; }
+.ac-name { font-size:0.95rem; font-weight:500; color:#fff; margin-bottom:0.35rem; line-height:1.4; }
+.ac-org { font-size:0.82rem; color:rgba(255,255,255,0.5); line-height:1.5; }
+
+/* ══ NEWS ══ */
+.news-ps { min-height: auto; }
+.news-overlay { background: rgba(6,16,14,0.78); }
+.ng { display:grid; grid-template-columns:repeat(2,1fr); gap:1.25rem; }
+.nc { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:var(--radius-lg); padding:1.5rem 1.75rem; display:grid; grid-template-columns:auto 1fr; gap:1.25rem; backdrop-filter:blur(10px); transition:background 0.2s,border-color 0.2s; }
+.nc:hover { background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.24); }
+.nd { display:flex; flex-direction:column; align-items:center; min-width:2.5rem; }
+.nd-mo { font-size:0.62rem; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent-mid); }
+.nd-day { font-family:var(--serif); font-size:1.5rem; font-weight:500; color:#fff; line-height:1; }
+.nd-dot { width:5px; height:5px; border-radius:50%; margin-top:0.5rem; }
+.nt { font-size:0.925rem; font-weight:500; color:#fff; margin-bottom:0.35rem; line-height:1.4; }
+.nb { font-size:0.85rem; color:rgba(255,255,255,0.6); line-height:1.6; }
+.ntag { display:inline-block; margin-top:0.7rem; font-size:0.67rem; font-weight:500; letter-spacing:0.07em; text-transform:uppercase; padding:0.15rem 0.6rem; border-radius:2rem; }
+
+/* ══ CONTACT ══ */
+.contact-ps { min-height: auto; }
+.contact-overlay { background: linear-gradient(135deg, rgba(6,10,20,0.94) 0%, rgba(6,10,20,0.78) 100%); }
+.cg { display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:center; }
+.c-desc { font-size:1rem; color:rgba(255,255,255,0.55); line-height:1.78; max-width:42ch; margin-top:1rem; }
+.cl { display:flex; flex-direction:column; gap:0.85rem; }
+.clink { display:flex; align-items:center; gap:1rem; padding:1rem 1.35rem; border:1px solid rgba(255,255,255,0.1); border-radius:var(--radius-lg); color:#fff; text-decoration:none; backdrop-filter:blur(6px); background:rgba(255,255,255,0.04); transition:background 0.2s,border-color 0.2s; }
+.clink:hover { background:rgba(255,255,255,0.09); border-color:rgba(255,255,255,0.28); }
+.ci { width:34px; height:34px; background:rgba(255,255,255,0.08); border-radius:var(--radius); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+.ct { flex:1; }
+.ct .cl-lbl { font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; color:rgba(255,255,255,0.36); margin-bottom:0.1rem; }
+.ct .cl-val { font-size:0.875rem; color:rgba(255,255,255,0.88); }
+.ca { color:rgba(255,255,255,0.28); font-size:0.875rem; }
+
+/* FOOTER */
+footer { background:#0a0b09; border-top:1px solid rgba(255,255,255,0.06); padding:1.5rem clamp(2rem,6vw,6rem); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
+footer p { font-size:0.78rem; color:rgba(255,255,255,0.27); }
+footer a { color:rgba(255,255,255,0.36); text-decoration:none; font-size:0.78rem; transition:color 0.2s; }
+footer a:hover { color:var(--accent-mid); }
+.fl { display:flex; gap:1.5rem; }
+
+/* RESPONSIVE */
+@media (max-width: 960px) {
+  .about-grid { grid-template-columns:1fr; gap:3rem; }
+  .rg { grid-template-columns:1fr 1fr; }
+  .ag { grid-template-columns:1fr; gap:1rem; }
+  .ng { grid-template-columns:1fr; }
+  .cg { grid-template-columns:1fr; gap:3rem; }
+  .hero-stat-bar { flex-wrap:wrap; }
+  .hstat { min-width:50%; }
+}
+@media (max-width: 620px) {
+  nav { padding:0 1.25rem; }
+  .nav-links { gap:1.1rem; }
+  .nav-links li:nth-child(n+5) { display:none; }
+  .rg { grid-template-columns:1fr; }
+  .pub-row { grid-template-columns:1fr; }
+  .pub-yr { text-align:left; border-right:none; padding-right:0; border-bottom:1px solid var(--paper-tint); padding-bottom:0.5rem; }
+  .hero-stat-bar { display:none; }
+  .ps-content { padding:5rem 1.5rem 3rem; }
+  .pubs-section { padding:3rem 1.5rem; }
+}
+
+/* Fade-in animations for hero text */
+@keyframes fu { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+.hero-eyebrow { animation: fu 0.6s ease both; }
+.hero-name    { animation: fu 0.65s 0.1s ease both; }
+.hero-name-jp { animation: fu 0.65s 0.16s ease both; }
+.hero-desc    { animation: fu 0.65s 0.22s ease both; }
+.hero-tags    { animation: fu 0.65s 0.3s ease both; }
+.hero-cta     { animation: fu 0.65s 0.38s ease both; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-brand" href="#">Amane <em>Tajika</em></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#publications">Publications</a></li>
+    <li><a href="#awards">Awards</a></li>
+    <li><a href="#news">News</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ══ HERO: ammonite spiral fossil in rock ══ -->
+<section class="ps hero-ps" id="home">
+  <div class="ps-bg" id="bg-hero"
+    data-src="https://images.unsplash.com/photo-1518012312832-96aea3c91144?w=1800&q=85&fit=crop&crop=entropy"
+    style="background-color:#0e1810;"></div>
+  <div class="ps-overlay hero-overlay"></div>
+  <div class="ps-content">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Paleontology · Kyoto University &amp; AMNH</div>
+      <h1 class="hero-name">Amane Tajika</h1>
+      <p class="hero-name-jp">田近 周</p>
+      <p class="hero-desc">I study the evolution, ecology, and extinction of ancient cephalopods — tracing what ammonoid and nautilid fossils reveal about survival across deep time.</p>
+      <div class="hero-tags">
+        <span class="htag">🐚 Cephalopoda</span>
+        <span class="htag">🪨 Paleontology</span>
+        <span class="htag">⚗️ Stable Isotopes</span>
+        <span class="htag">🔬 3D Morphometrics</span>
+        <span class="htag">🌊 Marine Biology</span>
+      </div>
+      <div class="hero-cta">
+        <a href="#publications" class="btn-w">View Publications →</a>
+        <a href="https://scholar.google.com/citations?user=mupykOwAAAAJ" target="_blank" class="btn-o">Google Scholar ↗</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-stat-bar">
+    <div class="hstat"><div class="hstat-n">29+</div><div class="hstat-l">Peer-reviewed papers</div></div>
+    <div class="hstat"><div class="hstat-n">567</div><div class="hstat-l">Citations</div></div>
+    <div class="hstat"><div class="hstat-n">3</div><div class="hstat-l">International awards</div></div>
+    <div class="hstat"><div class="hstat-n">8</div><div class="hstat-l">Research grants</div></div>
+  </div>
+</section>
+
+<!-- ══ ABOUT: layered sedimentary rock strata / field work ══ -->
+<section class="ps about-ps" id="about">
+  <div class="ps-bg" id="bg-about"
+    data-src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1800&q=85&fit=crop&crop=entropy"
+    style="background-color:#0a100a;"></div>
+  <div class="ps-overlay about-overlay"></div>
+  <div class="ps-content">
+    <div class="about-grid">
+      <!-- Portrait + affiliations -->
+      <div class="rv">
+        <div class="portrait-frame">
+          <svg width="100%" height="100%" viewBox="0 0 320 440" xmlns="http://www.w3.org/2000/svg">
+            <rect width="320" height="440" fill="#252820"/>
+            <ellipse cx="160" cy="155" rx="68" ry="74" fill="#363830"/>
+            <path d="M35 440 C35 315 100 285 160 285 C220 285 285 315 285 440Z" fill="#363830"/>
+            <rect width="320" height="440" fill="url(#pg)" opacity="0.55"/>
+            <defs>
+              <linearGradient id="pg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#0a100a" stop-opacity="0.0"/>
+                <stop offset="100%" stop-color="#0a100a" stop-opacity="0.72"/>
+              </linearGradient>
+            </defs>
+            <text x="160" y="396" text-anchor="middle" font-family="Georgia,serif" font-size="12" font-style="italic" fill="white" opacity="0.45">Add your photo here</text>
+          </svg>
+          <div class="portrait-quote">
+            <p>"The fossil record is an archive of experiments in survival — most of which failed."</p>
+          </div>
+        </div>
+        <div class="affil-list">
+          <div class="affil-item"><div class="affil-dot blue"></div><div class="affil-txt"><strong>Kyoto University</strong>Hakubi Center / Graduate School of Human &amp; Environmental Studies</div></div>
+          <div class="affil-item"><div class="affil-dot grn"></div><div class="affil-txt"><strong>American Museum of Natural History</strong>Research Associate, Division of Paleontology (Invertebrates)</div></div>
+        </div>
+      </div>
+      <!-- Text -->
+      <div class="about-body">
+        <div class="s-header rv">
+          <div class="s-label on-dark">About</div>
+          <h2 class="s-title on-dark">Tracing life through<br>stone and time</h2>
+        </div>
+        <p class="lead rv">I'm a paleontologist with a deep fascination for cephalopods — the group that gave us ammonoids, nautilids, and today's octopus and squid — and the clues they leave behind in ancient rock.</p>
+        <p class="rv">My research uses 3D morphometrics, computed tomography, and stable isotope geochemistry to reconstruct the ecology, growth, and metabolic rates of extinct and extant shell-bearing cephalopods. A central question driving my work is: why did ammonoids go extinct at the end of the Cretaceous while nautilids survived?</p>
+        <p class="rv">I completed my Ph.D. at the University of Zurich, then held JSPS postdoctoral fellowships at the American Museum of Natural History and the University of Tokyo. I am now based at Kyoto University as a Hakubi Research Fellow.</p>
+        <p class="rv">I believe science should be transparent, reproducible, and shared widely — including beyond specialist audiences.</p>
+        <div class="tl rv">
+          <div class="s-label on-dark" style="margin-bottom:1rem;">Research History</div>
+          <div class="tl-row"><div class="tl-yr">2022–<br>present</div><div><div class="tl-role">Research Associate</div><div class="tl-org">Paleontology (Invertebrates), American Museum of Natural History</div></div></div>
+          <div class="tl-row"><div class="tl-yr">2023</div><div><div class="tl-role">JSPS Cross-border Postdoctoral Fellow</div><div class="tl-org">Paleontological Institute, University of Zurich</div></div></div>
+          <div class="tl-row"><div class="tl-yr">2020–23</div><div><div class="tl-role">JSPS Cross-border Postdoctoral Fellow</div><div class="tl-org">University Museum, Univ. of Tokyo &amp; AMNH</div></div></div>
+          <div class="tl-row"><div class="tl-yr">2018–20</div><div><div class="tl-role">JSPS Overseas Research Fellow</div><div class="tl-org">Division of Paleontology (Invertebrates), AMNH</div></div></div>
+          <div class="tl-row"><div class="tl-yr">2013–17</div><div><div class="tl-role">Ph.D. in Natural Sciences</div><div class="tl-org">University of Zurich, Switzerland</div></div></div>
+          <div class="tl-row"><div class="tl-yr">2006–10</div><div><div class="tl-role">B.L.A.</div><div class="tl-org">Yokohama National University</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ RESEARCH: deep ocean blue water ══ -->
+<section class="ps research-ps" id="research">
+  <div class="ps-bg" id="bg-research"
+    data-src="https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=1800&q=85&fit=crop&crop=entropy"
+    style="background-color:#060e1a;"></div>
+  <div class="ps-overlay research-overlay"></div>
+  <div class="ps-content">
+    <div class="s-header rv">
+      <div class="s-label on-dark">Research Focus</div>
+      <h2 class="s-title on-dark">What I study</h2>
+      <p class="s-sub on-dark">Three interconnected questions about cephalopods, extinction, and deep-time ecology.</p>
+    </div>
+    <div class="rg">
+      <div class="rc c1 rv">
+        <span class="rc-icon">🐚</span>
+        <h3 class="rc-title">Ammonoid &amp; Nautiloid Evolution</h3>
+        <p class="rc-body">Using 3D morphometrics and CT scanning to document intraspecific variation, ontogenetic growth patterns, and the evolution of conch shape across geological time.</p>
+        <div class="rc-kws"><span class="kw">3D morphometrics</span><span class="kw">CT scanning</span><span class="kw">ontogeny</span><span class="kw">taxonomy</span></div>
+      </div>
+      <div class="rc c2 rv">
+        <span class="rc-icon">⚗️</span>
+        <h3 class="rc-title">Metabolic Rates &amp; Selective Extinction</h3>
+        <p class="rc-body">Investigating why ammonoids went extinct at the K-Pg boundary while nautilids survived, using stable carbon isotopes as a proxy for metabolic rate in fossil shell material.</p>
+        <div class="rc-kws"><span class="kw">stable isotopes</span><span class="kw">K-Pg extinction</span><span class="kw">metabolic proxies</span></div>
+      </div>
+      <div class="rc c3 rv">
+        <span class="rc-icon">🌊</span>
+        <h3 class="rc-title">Ecology of Living &amp; Fossil Cephalopods</h3>
+        <p class="rc-body">Reconstructing the habitat, reproductive biology, and ecology of cephalopods by combining isotopic analysis of modern Nautilus with the fossil record.</p>
+        <div class="rc-kws"><span class="kw">paleoecology</span><span class="kw">Nautilus</span><span class="kw">biostratigraphy</span><span class="kw">marine biology</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PUBLICATIONS: clean warm paper (legibility essential) ══ -->
+<section class="pubs-section" id="publications">
+  <div class="s-header">
+    <div class="s-label on-light">Publications</div>
+    <h2 class="s-title on-light">Selected works</h2>
+    <p class="s-sub on-light">29 peer-reviewed papers. <a href="https://scholar.google.com/citations?user=mupykOwAAAAJ" target="_blank" style="color:var(--accent);text-decoration:none;">Full list on Google Scholar →</a></p>
+  </div>
+  <div class="pub-filters">
+    <button class="fb active">All</button>
+    <button class="fb">Extinction</button>
+    <button class="fb">Morphometrics</button>
+    <button class="fb">Stable Isotopes</button>
+    <button class="fb">Taxonomy</button>
+  </div>
+  <div class="pub-list">
+    <div class="pub-row rv"><div class="pub-yr">2025</div><div><div class="pub-t">Reproductive biology and anatomy of ammonites</div><div class="pub-a">C. Klug, G. Schweigert, R. Lauer, B. Lauer, D. Fuchs, K. Terakado, <strong>A. Tajika</strong></div><div class="pub-j">Scientific Reports, 15(1)</div></div><span class="pb pb-sci">Sci. Reports</span></div>
+    <div class="pub-row rv"><div class="pub-yr">2025</div><div><div class="pub-t">Lethal injuries on the scaphitid ammonoid Hoploscaphites nicolletii in the Upper Cretaceous Fox Hills Formation, South Dakota, USA</div><div class="pub-a"><strong>A. Tajika</strong>, A. Rashkova, N. H. Landman, A. A. Klompmaker</div><div class="pub-j">Swiss Journal of Palaeontology, 144(1)</div></div><span class="pb pb-swiss">Swiss J. Pal.</span></div>
+    <div class="pub-row rv"><div class="pub-yr">2023</div><div><div class="pub-t">Ammonoid extinction versus nautiloid survival: Is metabolism responsible?</div><div class="pub-a"><strong>A. Tajika</strong>, N. H. Landman, J. K. Cochran, K. Nishida, K. Shirai, T. Ishimura, N. Murakami-Sugihara, K. Sato</div><div class="pub-j">Geology, 51(7), 621–625</div></div><span class="pb pb-geo">Geology</span></div>
+    <div class="pub-row rv"><div class="pub-yr">2022</div><div><div class="pub-t">Intra- and interspecific variability in offspring size in nautilids</div><div class="pub-a"><strong>A. Tajika</strong>, N. H. Landman, M. Slovacek, K. Nishida, W. Morita, J. D. Witts</div><div class="pub-j">Lethaia, 55(3), 1–17</div></div><span class="pb pb-pal">Lethaia</span></div>
+    <div class="pub-row rv"><div class="pub-yr">2022</div><div><div class="pub-t">Isotopic evidence concerning the habitat of Nautilus macromphalus in New Caledonia</div><div class="pub-a"><strong>A. Tajika</strong>, N. H. Landman, J. K. Cochran, C. Goiran, A. Le Bouteiller</div><div class="pub-j">PLOS ONE, 17(7), e0271235</div></div><span class="pb pb-plos">PLOS ONE</span></div>
+    <div class="pub-row rv"><div class="pub-yr">2021</div><div><div class="pub-t">Significance of the suture line in cephalopod taxonomy revealed by 3D morphometrics in the modern nautilids Nautilus and Allonautilus</div><div class="pub-a"><strong>A. Tajika</strong>, N. Morimoto, N. H. Landman</div><div class="pub-j">Scientific Reports, 11(1)</div></div><span class="pb pb-sci">Sci. Reports</span></div>
+    <div class="pub-row rv"><div class="pub-yr">2020</div><div><div class="pub-t">Chamber volume development, metabolic rates, and selective extinction in cephalopods</div><div class="pub-a"><strong>A. Tajika</strong>, N. H. Landman, R. Hoffmann, R. Lemanis, N. Morimoto, C. Ifrim, C. Klug</div><div class="pub-j">Scientific Reports, 10, 2950</div></div><span class="pb pb-sci">Sci. Reports</span></div>
+    <div class="pub-row rv"><div class="pub-yr">2018</div><div><div class="pub-t">Intraspecific variation in cephalopod conchs changes during ontogeny: Perspectives from 3D morphometry of Nautilus pompilius</div><div class="pub-a"><strong>A. Tajika</strong>, N. Morimoto, R. Wani, C. Klug</div><div class="pub-j">Paleobiology, 44(1), 118–130</div></div><span class="pb pb-pal">Paleobiology</span></div>
+  </div>
+</section>
+
+<!-- ══ AWARDS: warm golden sandstone / mineral ══ -->
+<section class="ps awards-ps" id="awards">
+  <div class="ps-bg" id="bg-awards"
+    data-src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1800&q=85&fit=crop&crop=entropy"
+    style="background-color:#140e06;"></div>
+  <div class="ps-overlay awards-overlay"></div>
+  <div class="ps-content">
+    <div class="s-header rv">
+      <div class="s-label on-dark">Recognition</div>
+      <h2 class="s-title on-dark">Awards</h2>
+    </div>
+    <div class="ag">
+      <div class="ac rv"><div class="ac-yr">2024</div><div class="ac-name">Research Encouragement Award</div><div class="ac-org">Palaeontological Society of Japan</div></div>
+      <div class="ac rv"><div class="ac-yr">2018</div><div class="ac-name">Oswald Heer Prize</div><div class="ac-org">Naturforschende Gesellschaft in Zürich / SCNAT, Switzerland</div></div>
+      <div class="ac rv"><div class="ac-yr">2015</div><div class="ac-name">Swiss Commission of Paleontology Prize</div><div class="ac-org">13th Swiss Geoscience Meeting</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ NEWS: field landscape / aerial geology ══ -->
+<section class="ps news-ps" id="news">
+  <div class="ps-bg" id="bg-news"
+    data-src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1800&q=85&fit=crop&crop=entropy"
+    style="background-color:#080e0c;"></div>
+  <div class="ps-overlay news-overlay"></div>
+  <div class="ps-content">
+    <div class="s-header rv">
+      <div class="s-label on-dark">News &amp; Updates</div>
+      <h2 class="s-title on-dark">Recent highlights</h2>
+    </div>
+    <div class="ng">
+      <div class="nc rv">
+        <div class="nd"><div class="nd-mo">Nov</div><div class="nd-day">12</div><div class="nd-dot" style="background:var(--accent-mid);"></div></div>
+        <div><div class="nt">New paper on ammonite reproductive biology in Scientific Reports</div><p class="nb">With Christian Klug and colleagues — the first detailed study of reproductive anatomy preserved in ammonite fossils. A remarkable window into ancient life.</p><span class="ntag" style="background:rgba(91,154,199,0.18);color:var(--accent-mid);">Publication · 2025</span></div>
+      </div>
+      <div class="nc rv">
+        <div class="nd"><div class="nd-mo">Oct</div><div class="nd-day">23</div><div class="nd-dot" style="background:#7aad7c;"></div></div>
+        <div><div class="nt">Invited talk at GSA Connects 2023, Pittsburgh</div><p class="nb">Presenting new findings on sublethal predatory injuries in scaphitid ammonoids from the Upper Cretaceous Fox Hills Formation.</p><span class="ntag" style="background:rgba(122,173,124,0.18);color:#7aad7c;">Talk · Invited</span></div>
+      </div>
+      <div class="nc rv">
+        <div class="nd"><div class="nd-mo">Nov</div><div class="nd-day">18</div><div class="nd-dot" style="background:#c49a5c;"></div></div>
+        <div><div class="nt">Talk at the 21st Swiss Geoscience Meeting</div><p class="nb">Presenting work on the selective extinction of cephalopods at the K-Pg boundary, connecting metabolic rates and long-term survival.</p><span class="ntag" style="background:rgba(196,154,92,0.18);color:#c49a5c;">Talk · 2023</span></div>
+      </div>
+      <div class="nc rv">
+        <div class="nd"><div class="nd-mo">Apr</div><div class="nd-day">01</div><div class="nd-dot" style="background:#b07aad;"></div></div>
+        <div><div class="nt">New JSPS grant: cephalopod jaw elements as environmental archives</div><p class="nb">A new project using ultra-high-resolution isotope analysis of cephalopod jaw elements to reconstruct past ocean chemistry.</p><span class="ntag" style="background:rgba(176,122,173,0.18);color:#b07aad;">Funding · 2024–2027</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT: deep space / cosmic dark ══ -->
+<section class="ps contact-ps" id="contact">
+  <div class="ps-bg" id="bg-contact"
+    data-src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1800&q=85&fit=crop&crop=entropy"
+    style="background-color:#060a14;"></div>
+  <div class="ps-overlay contact-overlay"></div>
+  <div class="ps-content">
+    <div class="cg">
+      <div class="rv">
+        <div class="s-label on-dark">Contact</div>
+        <h2 class="s-title on-dark">Let's connect</h2>
+        <p class="c-desc">Whether you're a prospective student, a collaborator, or simply curious about fossil cephalopods — I'm always happy to hear from you.</p>
+      </div>
+      <div class="cl rv">
+        <a href="mailto:atajika@amnh.org" class="clink"><div class="ci">✉</div><div class="ct"><div class="cl-lbl">Email</div><div class="cl-val">atajika@amnh.org</div></div><span class="ca">→</span></a>
+        <a href="https://scholar.google.com/citations?user=mupykOwAAAAJ" target="_blank" class="clink"><div class="ci">📄</div><div class="ct"><div class="cl-lbl">Google Scholar</div><div class="cl-val">567 citations · Paleontology, Evolutionary Biology</div></div><span class="ca">→</span></a>
+        <a href="https://researchmap.jp/atajika?lang=en" target="_blank" class="clink"><div class="ci">🗾</div><div class="ct"><div class="cl-lbl">Researchmap</div><div class="cl-val">researchmap.jp/atajika</div></div><span class="ca">→</span></a>
+        <a href="https://jglobal.jst.go.jp/en/detail?JGLOBAL_ID=201801000052792388" target="_blank" class="clink"><div class="ci">🔗</div><div class="ct"><div class="cl-lbl">J-GLOBAL ID</div><div class="cl-val">201801000052792388</div></div><span class="ca">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Amane Tajika (田近 周). All rights reserved.</p>
+  <div class="fl">
+    <a href="https://scholar.google.com/citations?user=mupykOwAAAAJ" target="_blank">Google Scholar</a>
+    <a href="https://researchmap.jp/atajika?lang=en" target="_blank">Researchmap</a>
+    <a href="https://www.researchgate.net/profile/Amane-Tajika" target="_blank">ResearchGate</a>
+  </div>
+</footer>
+
+<script>
+// ── Lazy-load background images with fade-in ──
+document.querySelectorAll('.ps-bg[data-src]').forEach(el => {
+  const img = new Image();
+  img.onload = () => {
+    el.style.backgroundImage = `url('${img.src}')`;
+    el.classList.add('loaded');
+  };
+  img.src = el.dataset.src;
+});
+
+// ── Nav switches to light style over Publications section ──
+const nav = document.getElementById('nav');
+const pubSection = document.getElementById('publications');
+window.addEventListener('scroll', () => {
+  if (!pubSection) return;
+  const r = pubSection.getBoundingClientRect();
+  if (r.top < 58 && r.bottom > 0) {
+    nav.classList.add('scrolled-light');
+  } else {
+    nav.classList.remove('scrolled-light');
+  }
+}, { passive: true });
+
+// ── Scroll reveal ──
+const ro = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      ro.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.07 });
+document.querySelectorAll('.rv').forEach((el, i) => {
+  el.style.transitionDelay = `${(i % 5) * 0.07}s`;
+  ro.observe(el);
+});
+
+// ── Parallax on photo backgrounds ──
+let rafPending = false;
+window.addEventListener('scroll', () => {
+  if (rafPending) return;
+  rafPending = true;
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.ps-bg').forEach(bg => {
+      const sec = bg.parentElement;
+      const rect = sec.getBoundingClientRect();
+      const wh = window.innerHeight;
+      if (rect.bottom > 0 && rect.top < wh) {
+        const pct = (rect.top / wh);
+        bg.style.transform = `translateY(${pct * 30}px) scale(1.08)`;
+      }
+    });
+    rafPending = false;
+  });
+}, { passive: true });
+
+// ── Filter buttons ──
+document.querySelectorAll('.fb').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.fb').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
